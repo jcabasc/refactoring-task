@@ -6,6 +6,7 @@ class Player::Zype < Player
   field :ad_tag_required, type: :boolean, default: true
   class Renderer
     include BaseRenderer
+    include RendererMixin
     include Player::Manifest
 
     def render
@@ -55,22 +56,9 @@ class Player::Zype < Player
       @data_source.video.age_gate_required?
     end
 
-    def google_analytics_required?
-      @data_source.site.ga_enabled?
-    end
 
     def player_sharing_enabled?
       @data_source.site.player_sharing_enabled?
-    end
-
-    def content_url(path)
-      options = {
-        host: APP_CONFIG[:content_host],
-        port: (referer_https? ? APP_CONFIG[:https_port] : APP_CONFIG[:http_port]),
-        path: path
-      }
-
-      (referer_https? ? URI::HTTPS : URI::HTTP).build(options).to_s
     end
 
     def logo_plugin
@@ -91,16 +79,6 @@ class Player::Zype < Player
           label: s.language_name,
           kind: 'captions' }
       end
-    end
-
-    def ga_plugin
-      {
-        ga: {
-          idstring: "title",
-          trackingobject: @data_source.video.site.ga_object,
-          label: "title"
-        }
-      }
     end
 
     def age_gate_plugin

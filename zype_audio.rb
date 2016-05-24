@@ -6,6 +6,7 @@ class Player::ZypeAudio < Player
 
   class Renderer
     include BaseRenderer
+    include RendererMixin
     include Player::Manifest
 
     def audio_outputs
@@ -32,28 +33,5 @@ class Player::ZypeAudio < Player
       player.to_json
     end
 
-    def google_analytics_required?
-      @data_source.site.ga_enabled?
-    end
-
-    def content_url(path)
-      options = {
-        host: APP_CONFIG[:content_host],
-        port: (referer_https? ? APP_CONFIG[:https_port] : APP_CONFIG[:http_port]),
-        path: path
-      }
-
-      (referer_https? ? URI::HTTPS : URI::HTTP).build(options).to_s
-    end
-
-    def ga_plugin
-      {
-        ga: {
-          idstring: "title",
-          trackingobject: @data_source.video.site.ga_object,
-          label: "title"
-        }
-      }
-    end
   end
 end
