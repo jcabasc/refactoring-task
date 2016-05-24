@@ -32,46 +32,32 @@ class Player::Zype < Player
     def render
       # build out base player with media information,
       # core settings including width, height, aspect ratio
-      # auto start, skin
-      player = {
-        playlist: [{
-          sources: [{file: manifest_url}],
-          image: default_thumbnail_url,
-          title: @data_source.video.title,
-          mediaid: @data_source.video.id.to_s,
-                  tracks: subtitles
-
-        }],
-        plugins: {},
-        androidhls: true,
-        aspectratio: "16:9",
-        autostart: @options[:autoplay] ? true : false,
-        flashplayer: content_url('/jwplayer/6.11/jwplayer.flash.swf'),
-        html5player: content_url('/jwplayer/6.11/jwplayer.html5.js'),
-        primary: APP_CONFIG[:player_default_mode],
-        skin: APP_CONFIG[:player_default_skin],
-        width: "100%",
-        abouttext: @data_source.site.title,
-        aboutlink: @data_source.site.player_logo_link
-      }
+      # a uto start, skin
+      @options[:sources] = [{file: manifest_url}]
+      @options[:image] = default_thumbnail_url
+      @options[:tracks] = subtitles
+      @options[:aspectratio] = "16:9"
+      @options[:abouttext] = @data_source.site.title
+      @options[:aboutlink] = @data_source.site.player_logo_link
+      player = PlayerBuilder.build(@data_source, @options)
 
       # if player logo is present merge in the plugin
-      if @data_source.site.player_logo.present?
+      if logo_present?
         player.merge!(logo_plugin)
       end
 
       # if age gate is required merge in the plugin
-      if @data_source.video.age_gate_required?
+      if age_gate_required?
         player[:plugins].merge!(age_gate_plugin)
         # disable autostart when age gate enabled
         player[:autostart] = false
       end
       # if google analytics is required merge in the plugin
-      if @data_source.site.ga_enabled?
+      if google_analytics_required?
         player.merge!(ga_plugin)
       end
 
-      if @data_source.site.player_sharing_enabled?
+      if player_sharing_enabled?
         player.merge!(sharing: {})
       end
 
@@ -80,6 +66,22 @@ class Player::Zype < Player
       end
 
       player.to_json
+    end
+
+    def logo_present?
+      @data_source.site.player_logo.present?
+    end
+
+    def age_gate_required?
+      @data_source.video.age_gate_required?
+    end
+
+    def google_analytics_required?
+      @data_source.site.ga_enabled?
+    end
+
+    def player_sharing_enabled?
+      @data_source.site.player_sharing_enabled?
     end
 
     def content_url(path)

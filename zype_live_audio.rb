@@ -16,29 +16,21 @@ class Player::ZypeLiveAudio < Player::ZypeLive
       # build out base player with media information,
       # core settings including width, height, aspect ratio
       # auto start, skin
-      player = {
-        playlist: [{
-          sources: [{file: manifest_url}],
-          title: @data_source.video.title,
-          mediaid: @data_source.video.id.to_s
-        }],
-        plugins: {},
-        androidhls: true,
-        autostart: @options[:autoplay] ? true : false,
-        flashplayer: content_url('/jwplayer/6.11/jwplayer.flash.swf'),
-        height: 30,
-        html5player: content_url('/jwplayer/6.11/jwplayer.html5.js'),
-        primary: APP_CONFIG[:player_default_mode],
-        skin: APP_CONFIG[:player_default_skin],
-        width: "100%"
-      }
+      @options[:sources] = [{file: manifest_url}]
+      @options[:height] = 30
+      player = PlayerBuilder.build(@data_source, @options)
 
       # if google analytics is required merge in the plugin
-      if @data_source.site.ga_enabled?
+      if google_analytics_required?
         player.merge!(ga_plugin)
       end
 
       player.to_json
     end
+
+    def google_analytics_required?
+      @data_source.site.ga_enabled?
+    end
+
   end
 end
