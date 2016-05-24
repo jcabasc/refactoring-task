@@ -5,7 +5,7 @@ class Player::ZypeLiveAudio < Player::ZypeLive
   field :on_air_required, type: :boolean, default: true
   field :audio_required, type: :boolean, default: true
 
-  class Renderer < Player::ZypeLive::Renderer
+  class Renderer < BaseRenderer
     include Player::Manifest
 
     def manifest_params
