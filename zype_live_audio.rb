@@ -1,12 +1,9 @@
 require 'aes_crypt'
 
 class Player::ZypeLiveAudio < Player::ZypeLive
+  include PlayerMixin
   field :on_air_required, type: :boolean, default: true
   field :audio_required, type: :boolean, default: true
-
-  def build_player(data_source,options={})
-    Player::ZypeLiveAudio::Renderer.new(data_source,options).render
-  end
 
   class Renderer < Player::ZypeLive::Renderer
     include Player::Manifest
