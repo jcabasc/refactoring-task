@@ -32,33 +32,16 @@ class PlayerBuilder
       primary: APP_CONFIG[:player_default_mode],
       skin: APP_CONFIG[:player_default_skin],
       width: "100%"
-    }.merge!(about_text.to_h).merge!(about_link.to_h).merge!(aspect_ratio.to_h).merge!(height.to_h)
+    }.merge!(abouttext.to_h).merge!(aboutlink.to_h).merge!(aspectratio.to_h).merge!(height.to_h)
   end
 
   private
 
-  def image
-    { image: options[:image] } unless options[:image].nil?
-  end
-
-  def tracks
-    { tracks: options[:tracks] } unless options[:tracks].nil?
-  end
-
-  def about_text
-    { abouttext: options[:abouttext] } unless options[:abouttext].nil?
-  end
-
-  def about_link
-    { aboutlink: options[:aboutlink] } unless options[:aboutlink].nil?
-  end
-
-  def aspect_ratio
-    { aspectratio: options[:aspectratio] } unless options[:aspectratio].nil?
-  end
-
-  def height
-    { height: options[:height] } unless options[:height].nil?
+  ["image", "tracks", "abouttext", "aboutlink", "aspectratio", "height"].each do |attr|
+    define_method("#{attr}") do
+      attr_sym = attr.to_sym
+      { attr_sym => options[attr_sym] } unless options[attr_sym].nil?
+    end
   end
 
 end
