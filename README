@@ -1,0 +1,8 @@
+Instructions
+------------
+Provide recommendations for how to refactor attached player models. The end goal is to simplify the inheritance chain between models while also reducing overall code complexity. 
+
+Requirements
+------------
+1) Refactor player models to only inherit from the base 'Player' class. 
+2) Duplicate code should be removed/refactored.
