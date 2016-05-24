@@ -1,4 +1,4 @@
-class BaseRenderer
+module BaseRenderer
   def initialize(data_source, options={})
     @data_source = data_source
     @options = options

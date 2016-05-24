@@ -4,7 +4,8 @@ class Player::Zype < Player
   include PlayerMixin
 
   field :ad_tag_required, type: :boolean, default: true
-  class Renderer < BaseRenderer
+  class Renderer
+    include BaseRenderer
     include Player::Manifest
 
     def render

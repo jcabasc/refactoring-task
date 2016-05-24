@@ -4,7 +4,8 @@ class Player::ZypeAudio < Player
   include PlayerMixin
   field :audio_required, type: :boolean, default: true
 
-  class Renderer < BaseRenderer
+  class Renderer
+    include BaseRenderer
     include Player::Manifest
 
     def audio_outputs

@@ -2,7 +2,8 @@ class Player::ZypeLive < Player::Zype
   include PlayerMixin
   field :on_air_required, type: :boolean, default: true
 
-  class Renderer < BaseRenderer
+  class Renderer
+    include BaseRenderer
     def manifest_expiration
       @data_source.expire_at.to_i
     end
